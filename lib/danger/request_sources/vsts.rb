@@ -84,7 +84,7 @@ module Danger
           thread_id = c[:id]
           puts thread_id
           comment = c[:comments].first
-          puts comment
+          puts comment[:id]
           puts comment[:content]
           @api.delete_comment(thread_id, comment[:id]) if comment[:content] =~ /generated_by_#{danger_id}/
         end
