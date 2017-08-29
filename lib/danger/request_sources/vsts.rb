@@ -11,8 +11,7 @@ module Danger
 
       def self.env_vars
         [
-          "DANGER_VSTS_USERNAME",
-          "DANGER_VSTS_PASSWORD",
+          "DANGER_VSTS_API_TOKEN",
           "DANGER_VSTS_HOST"
         ]
       end

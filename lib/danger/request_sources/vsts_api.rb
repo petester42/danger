@@ -8,8 +8,7 @@ module Danger
       attr_accessor :host, :pr_api_endpoint
 
       def initialize(_project, slug, pull_request_id, environment)
-        @username = environment["DANGER_VSTS_USERNAME"]
-        @password = environment["DANGER_VSTS_PASSWORD"]
+        @token = environment["DANGER_VSTS_API_TOKEN"]
         self.host = environment["DANGER_VSTS_HOST"]
         if self.host && !(self.host.include? "http://") && !(self.host.include? "https://")
           self.host = "https://" + self.host
@@ -17,18 +16,8 @@ module Danger
         self.pr_api_endpoint = "#{host}/_apis/git/repositories/#{slug}/pullRequests/#{pull_request_id}"
       end
 
-      def inspect
-        inspected = super
-
-        if @password
-          inspected = inspected.sub! @password, "********".freeze
-        end
-
-        inspected
-      end
-
       def credentials_given?
-        @username && !@username.empty? && @password && !@password.empty?
+        @token && !@token.empty?        
       end
 
       def fetch_pr_json
@@ -66,7 +55,7 @@ module Danger
 
       def fetch_json(uri)
         req = Net::HTTP::Get.new(uri.request_uri, { "Content-Type" => "application/json" })
-        req.basic_auth @username, @password
+        req.basic_auth @token
         res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl) do |http|
           http.request(req)
         end
@@ -75,7 +64,7 @@ module Danger
 
       def post(uri, body)
         req = Net::HTTP::Post.new(uri.request_uri, { "Content-Type" => "application/json" })
-        req.basic_auth @username, @password
+        req.basic_auth @token
         req.body = body
 
         res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl) do |http|
@@ -92,7 +81,7 @@ module Danger
 
       def delete(uri)
         req = Net::HTTP::Delete.new(uri.request_uri, { "Content-Type" => "application/json" })
-        req.basic_auth @username, @password
+        req.basic_auth @token
         Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl) do |http|
           http.request(req)
         end
