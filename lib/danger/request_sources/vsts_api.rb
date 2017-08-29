@@ -17,7 +17,7 @@ module Danger
       end
 
       def credentials_given?
-        @token && !@token.empty?        
+        @token && !@token.empty?
       end
 
       def fetch_pr_json
@@ -30,7 +30,7 @@ module Danger
         fetch_json(uri)[:value]
       end
 
-      def delete_comment(tread, id)
+      def delete_comment(_tread, id)
         uri = URI("#{pr_api_endpoint}/threads/#{thread}/comments/#{id}")
         delete(uri)
       end
@@ -54,8 +54,7 @@ module Danger
       end
 
       def fetch_json(uri)
-        req = Net::HTTP::Get.new(uri.request_uri, { "Content-Type" => "application/json" })
-        req.basic_auth @token
+        req = Net::HTTP::Get.new(uri.request_uri, { "Content-Type" => "application/json", "Authorization" => "Basic #{@token}" })
         res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl) do |http|
           http.request(req)
         end
@@ -63,8 +62,7 @@ module Danger
       end
 
       def post(uri, body)
-        req = Net::HTTP::Post.new(uri.request_uri, { "Content-Type" => "application/json" })
-        req.basic_auth @token
+        req = Net::HTTP::Post.new(uri.request_uri, { "Content-Type" => "application/json", "Authorization" => "Basic #{@token}" })
         req.body = body
 
         res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl) do |http|
@@ -80,8 +78,7 @@ module Danger
       end
 
       def delete(uri)
-        req = Net::HTTP::Delete.new(uri.request_uri, { "Content-Type" => "application/json" })
-        req.basic_auth @token
+        req = Net::HTTP::Delete.new(uri.request_uri, { "Content-Type" => "application/json", "Authorization" => "Basic #{@token}" })
         Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl) do |http|
           http.request(req)
         end
