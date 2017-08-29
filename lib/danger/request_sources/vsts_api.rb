@@ -9,7 +9,7 @@ module Danger
 
       def initialize(_project, slug, pull_request_id, environment)
         @username = environment["DANGER_VSTS_USERNAME"]
-        @password = environment["SECRET_DANGER_VSTS_PASSWORD"]
+        @password = environment["DANGER_VSTS_PASSWORD"]
         self.host = environment["DANGER_VSTS_HOST"]
         if self.host && !(self.host.include? "http://") && !(self.host.include? "https://")
           self.host = "https://" + self.host
