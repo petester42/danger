@@ -1,3 +1,5 @@
+require "danger/request_sources/vsts"
+
 module Danger
     # ### CI Setup
     #
