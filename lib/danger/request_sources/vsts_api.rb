@@ -9,6 +9,7 @@ module Danger
 
       def initialize(_project, slug, pull_request_id, environment)
         @token = environment["DANGER_VSTS_API_TOKEN"]
+        @api_version = "3.0"
         self.host = environment["DANGER_VSTS_HOST"]
         if self.host && !(self.host.include? "http://") && !(self.host.include? "https://")
           self.host = "https://" + self.host
@@ -21,22 +22,22 @@ module Danger
       end
 
       def fetch_pr_json
-        uri = URI(pr_api_endpoint)
+        uri = URI("#{pr_api_endpoint}?api-version=#{@api_version}")
         fetch_json(uri)
       end
 
       def fetch_last_comments
-        uri = URI("#{pr_api_endpoint}/threads")
+        uri = URI("#{pr_api_endpoint}/threads?api-version=#{@api_version}")
         fetch_json(uri)[:value]
       end
 
       def delete_comment(_tread, id)
-        uri = URI("#{pr_api_endpoint}/threads/#{thread}/comments/#{id}")
+        uri = URI("#{pr_api_endpoint}/threads/#{thread}/comments/#{id}?api-version=#{@api_version}")
         delete(uri)
       end
 
       def post_comment(text)
-        uri = URI("#{pr_api_endpoint}/threads")
+        uri = URI("#{pr_api_endpoint}/threads?api-version=#{@api_version}")
         body = {
           "comments" => [
             {
