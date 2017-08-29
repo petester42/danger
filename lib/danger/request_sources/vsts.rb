@@ -83,9 +83,10 @@ module Danger
         @api.fetch_last_comments.each do |c|
           thread_id = c[:id]
           comment = c[:comments].first
-          puts comment[:content]
-          puts comment[:content].include?("generated_by_#{danger_id}")
-          @api.delete_comment(thread_id, comment[:id]) if comment[:content].include?("generated_by_#{danger_id}")
+          comment_content = comment[:content].nil? ? "" : comment[:content]
+          puts comment_content
+          puts comment_content.include?("generated_by_#{danger_id}")
+          @api.delete_comment(thread_id, comment[:id]) if comment_content.include?("generated_by_#{danger_id}")
         end
       end
     end
