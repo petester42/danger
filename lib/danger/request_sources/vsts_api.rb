@@ -31,9 +31,7 @@ module Danger
         fetch_json(uri)[:value]
       end
 
-      def delete_comment(tread, id)
-        puts thread
-        puts id
+      def delete_comment(thread, id)
         uri = URI("#{pr_api_endpoint}/threads/#{thread}/comments/#{id}?api-version=#{@api_version}")
         delete(uri)
       end
