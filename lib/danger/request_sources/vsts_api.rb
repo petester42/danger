@@ -37,13 +37,22 @@ module Danger
 
       def post_comment(text)
         uri = URI("#{pr_api_endpoint}/threads")
-        body = { comments: [
-          {
-            parentCommentId: 0,
-            content: text,
-            commentType: 1
+        body = {
+          "comments": [
+            {
+              "parentCommentId": 0,
+              "content": text,
+              "commentType": 1
             }
-        ] }.to_json
+          ],
+          "properties": {
+            "Microsoft.TeamFoundation.Discussion.SupportsMarkdown": {
+              "type": "System.Int32",
+              "value": 1
+            }
+          },
+          "status": 1
+        }.to_json
         post(uri, body)
       end
 
