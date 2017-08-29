@@ -81,6 +81,7 @@ module Danger
 
       def delete_old_comments(danger_id: "danger")
         @api.fetch_last_comments.each do |c|
+          puts c
           thread_id = c[:id]
           comment = c[:comments].first
           @api.delete_comment(thread_id, comment[:id]) if comment[:content] =~ /generated_by_#{danger_id}/
