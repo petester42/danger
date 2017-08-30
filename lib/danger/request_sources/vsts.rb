@@ -16,6 +16,12 @@ module Danger
         ]
       end
 
+      def self.optional_env_vars
+        [
+          "DANGER_VSTS_API_VERSION"
+        ]
+      end
+
       def initialize(ci_source, environment)
         self.ci_source = ci_source
         self.environment = environment
@@ -64,6 +70,10 @@ module Danger
       end
 
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false)
+        unless @api.supports_comments?
+          return
+        end
+
         delete_old_comments(danger_id: danger_id) unless new_comment
 
         comment = generate_description(warnings: warnings, errors: errors)

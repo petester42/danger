@@ -5,19 +5,27 @@ require "danger/helpers/comments_helper"
 module Danger
   module RequestSources
     class VSTSAPI
-      attr_accessor :host, :pr_api_endpoint
+      attr_accessor :host, :pr_api_endpoint, :min_api_version_for_comments
 
       def initialize(_project, slug, pull_request_id, environment)
+        self.min_api_version_for_comments = "3.0"
+
         @token = environment["DANGER_VSTS_API_TOKEN"]
-        @api_version = "3.0"
+        @api_version = environment["DANGER_VSTS_API_VERSION"] ||= self.min_api_version_for_comments
+
         self.host = environment["DANGER_VSTS_HOST"]
         if self.host && !(self.host.include? "http://") && !(self.host.include? "https://")
           self.host = "https://" + self.host
         end
 
-        puts environment["DANGER_VSTS_HOST"]
-
         self.pr_api_endpoint = "#{host}/_apis/git/repositories/#{slug}/pullRequests/#{pull_request_id}"
+      end
+
+      def support_comments?
+        major_version = @api_version.split(".").first.to_i
+        minimun_version_for_comments = self.min_api_version_for_comments.split(".").first.to_i
+
+        major_version >= minimun_version_for_comments
       end
 
       def credentials_given?
