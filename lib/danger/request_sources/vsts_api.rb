@@ -14,6 +14,10 @@ module Danger
         if self.host && !(self.host.include? "http://") && !(self.host.include? "https://")
           self.host = "https://" + self.host
         end
+
+        puts environment["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"]
+        puts environment["SYSTEM_TEAMPROJECTID"]
+
         self.pr_api_endpoint = "#{host}/_apis/git/repositories/#{slug}/pullRequests/#{pull_request_id}"
       end
 
