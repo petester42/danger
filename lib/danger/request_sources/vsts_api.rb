@@ -11,9 +11,10 @@ module Danger
       def initialize(_project, slug, pull_request_id, environment)
         self.min_api_version_for_comments = "3.0"
 
-        raw_token = environment["DANGER_VSTS_API_TOKEN"]
+        user_name = ""
+        personal_access_token = environment["DANGER_VSTS_API_TOKEN"]
 
-        @token = Base64.strict_encode64(":#{raw_token}")        
+        @token = Base64.encode64("#{user_name}:#{personal_access_token}")        
         @api_version = environment["DANGER_VSTS_API_VERSION"] ||= self.min_api_version_for_comments
 
         self.host = environment["DANGER_VSTS_HOST"]
