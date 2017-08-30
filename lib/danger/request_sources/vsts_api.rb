@@ -15,8 +15,7 @@ module Danger
           self.host = "https://" + self.host
         end
 
-        puts environment["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"]
-        puts environment["SYSTEM_TEAMPROJECTID"]
+        puts environment["DANGER_VSTS_HOST"]
 
         self.pr_api_endpoint = "#{host}/_apis/git/repositories/#{slug}/pullRequests/#{pull_request_id}"
       end
