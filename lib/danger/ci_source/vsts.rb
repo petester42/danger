@@ -1,4 +1,5 @@
 require "danger/request_sources/vsts"
+require "danger/request_sources/github/github"
 
 module Danger
     # ### CI Setup
