@@ -11,7 +11,7 @@ module Danger
 
       def self.env_vars
         [
-          "DANGER_VSTS_API_TOKEN",
+          "SECRET_DANGER_VSTS_API_TOKEN",
           "DANGER_VSTS_HOST"
         ]
       end
