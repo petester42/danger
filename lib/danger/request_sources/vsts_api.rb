@@ -14,7 +14,7 @@ module Danger
         user_name = ""
         personal_access_token = environment["DANGER_VSTS_API_TOKEN"]
 
-        @token = Base64.encode64("#{user_name}:#{personal_access_token}")        
+        @token = Base64.strict_encode64("#{user_name}:#{personal_access_token}")        
         @api_version = environment["DANGER_VSTS_API_VERSION"] ||= self.min_api_version_for_comments
 
         self.host = environment["DANGER_VSTS_HOST"]
