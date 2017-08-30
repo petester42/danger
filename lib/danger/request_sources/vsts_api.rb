@@ -21,7 +21,7 @@ module Danger
         self.pr_api_endpoint = "#{host}/_apis/git/repositories/#{slug}/pullRequests/#{pull_request_id}"
       end
 
-      def support_comments?
+      def supports_comments?
         major_version = @api_version.split(".").first.to_i
         minimun_version_for_comments = self.min_api_version_for_comments.split(".").first.to_i
 
