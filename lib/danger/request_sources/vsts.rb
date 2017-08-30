@@ -74,7 +74,7 @@ module Danger
                                   markdowns: markdowns,
                         previous_violations: {},
                                   danger_id: danger_id,
-                                   template: "bitbucket_server")
+                                   template: "vsts")
 
         @api.post_comment(comment)
       end
