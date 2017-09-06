@@ -12,10 +12,18 @@ module Danger
         self.min_api_version_for_comments = "3.0"
 
         user_name = ""
-        personal_access_token = environment["DANGER_VSTS_API_TOKEN"]
+        token = environment["DANGER_VSTS_API_TOKEN"]
 
-        @token = Base64.strict_encode64("#{user_name}:#{personal_access_token}")
         @api_version = environment["DANGER_VSTS_API_VERSION"] ||= self.min_api_version_for_comments
+        @use_oauth = environment["DANGER_VSTS_USE_OAUTH"] ||= false
+
+        if @use_oauth
+          @token = token
+        else
+          @token = Base64.strict_encode64("#{user_name}:#{token}")
+        end
+
+        puts @token
 
         self.host = environment["DANGER_VSTS_HOST"]
         if self.host && !(self.host.include? "http://") && !(self.host.include? "https://")
@@ -87,12 +95,20 @@ module Danger
 
       private
 
+      def authorization
+        if @use_oath
+          "Bearer #{@token}"
+        else
+          "Basic #{@token}"
+        end
+      end
+
       def use_ssl
         return self.pr_api_endpoint.include? "https://"
       end
 
       def fetch_json(uri)
-        req = Net::HTTP::Get.new(uri.request_uri, { "Content-Type" => "application/json", "Authorization" => "Basic #{@token}" })
+        req = Net::HTTP::Get.new(uri.request_uri, { "Content-Type" => "application/json", "Authorization" => authorization })
         res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl) do |http|
           http.request(req)
         end

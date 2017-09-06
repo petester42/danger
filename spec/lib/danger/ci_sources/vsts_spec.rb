@@ -6,7 +6,6 @@ RSpec.describe Danger::VSTS do
       "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" => "https://example.visualstudio.com",
       "BUILD_REPOSITORY_URI" => "https://example.visualstudio.com/_git/danger-test",
       "BUILD_SOURCEBRANCH" => "refs/pull/800/merge",
-      "BUILD_REASON" => "PullRequest",
       "BUILD_REPOSITORY_NAME" => "danger-test",
       "SYSTEM_TEAMPROJECT" => "example",
       "BUILD_REPOSITORY_PROVIDER" => "TfsGit"
@@ -73,16 +72,6 @@ RSpec.describe Danger::VSTS do
 
     it "doesn't validate_as_pr if `BUILD_REPOSITORY_URI` is the empty string" do
       valid_env["BUILD_REPOSITORY_URI"] = ""
-      expect(described_class.validates_as_pr?(valid_env)).to be false
-    end
-
-    it "doesn't validate if `BUILD_REASON` is missing" do
-      valid_env["BUILD_REASON"] = nil
-      expect(described_class.validates_as_pr?(valid_env)).to be false
-    end
-
-    it "doesn't validate_as_pr if `BUILD_REASON` is the empty string" do
-      valid_env["BUILD_REASON"] = ""
       expect(described_class.validates_as_pr?(valid_env)).to be false
     end
 

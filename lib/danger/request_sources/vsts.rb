@@ -18,7 +18,8 @@ module Danger
 
       def self.optional_env_vars
         [
-          "DANGER_VSTS_API_VERSION"
+          "DANGER_VSTS_API_VERSION",
+          "DANGER_VSTS_USE_OAUTH"
         ]
       end
 

@@ -37,6 +37,10 @@ module Danger
 
         "#{project_name}/#{repo_name}"
       end
+
+      def parse_source_branch(env)
+        env["BUILD_SOURCEBRANCH"].match(%r{refs\/(.*)\/([0-9]+)\/merge})
+      end
     end
 
     def self.validates_as_ci?(env)
@@ -48,9 +52,14 @@ module Danger
     end
 
     def self.validates_as_pr?(env)
-      has_all_variables = ["BUILD_SOURCEBRANCH", "BUILD_REPOSITORY_URI", "BUILD_REASON", "BUILD_REPOSITORY_NAME"].all? { |x| env[x] && !env[x].empty? }
+      has_all_variables = ["BUILD_SOURCEBRANCH", "BUILD_REPOSITORY_URI", "BUILD_REPOSITORY_NAME"].all? { |x| env[x] && !env[x].empty? }
 
-      has_all_variables && env["BUILD_REASON"] == "PullRequest"
+      if has_all_variables
+        parsed_source_branch = parse_source_branch(env)
+        parsed_source_branch[1] == "pull" unless parsed_source_branch.nil?
+      else
+        false
+      end
     end
 
     def supported_request_sources
@@ -65,8 +74,9 @@ module Danger
         self.repo_slug = self.class.vsts_slug(env)
       end
 
-      repo_matches = env["BUILD_SOURCEBRANCH"].match(%r{refs\/pull\/([0-9]+)\/merge})
-      self.pull_request_id = repo_matches[1] unless repo_matches.nil?
+      parsed_source_branch = self.class.parse_source_branch(env)
+
+      self.pull_request_id = parsed_source_branch[2] unless parsed_source_branch.nil?
       self.repo_url = env["BUILD_REPOSITORY_URI"]
     end
   end
